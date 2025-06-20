@@ -1,60 +1,60 @@
-// 从 env.js 读取配置（或内联注入）
+// ✅ 从 window.env 中读取配置（你已经在 index.html 中定义）
 const { SUPABASE_URL, SUPABASE_KEY } = window.env;
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); // 避免变量冲突
 
-let map;                // 全局变量，用于后续 marker 操作
-let posts = [];         // 活动缓存
-let tempLatLng = null;  // 临时定位点
-let editingPostId = null;
+let map;
+let posts = [];
+let tempLatLng = null;
 
-// 等待 DOM 加载后再初始化地图和内容
 window.onload = () => {
-  // ----------- 初始化地图 ------------
+  // ✅ 初始化地图
   map = L.map('map').setView([37.7749, -122.4194], 13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  // 加载活动数据
+  // ✅ 加载活动数据
   loadPosts();
 
-  // 初始化时钟
+  // ✅ 启动时钟
   updateClock();
   setInterval(updateClock, 1000);
 };
 
-// ----------- 实时时钟 ------------
+// ---------- 时钟显示 ----------
 function updateClock() {
   const now = new Date();
   document.getElementById("clock").innerText = now.toLocaleString();
 }
 
-// ----------- 通知条 ------------
+// ---------- 通知提示 ----------
 function notify(msg, timeout = 2000) {
   const n = document.getElementById("notify");
   n.innerText = msg;
   n.classList.remove("hidden");
-  setTimeout(() => { n.classList.add("hidden"); }, timeout);
+  setTimeout(() => n.classList.add("hidden"), timeout);
 }
 
-// ----------- 发帖表单控制 ------------
+// ---------- 发帖表单 ----------
 function togglePostForm() {
   const form = document.getElementById("post-form");
   form.classList.toggle("hidden");
   if (form.classList.contains("hidden")) clearPostForm();
 }
+
 function clearPostForm() {
   ["titleInput", "addressInput", "startTime", "endTime", "descInput", "posterInput", "mediaInput"]
     .forEach(id => document.getElementById(id).value = "");
   tempLatLng = null;
   document.getElementById("postMediaPreview").innerHTML = "";
 }
+
 function cancelPostForm() {
   clearPostForm();
   document.getElementById("post-form").classList.add("hidden");
 }
 
-// ----------- 地址地理编码 ------------
+// ---------- 地址定位 ----------
 function geocodeAddress(focus) {
   const address = document.getElementById("addressInput").value.trim();
   if (!address) return notify("请输入活动地址");
@@ -65,15 +65,16 @@ function geocodeAddress(focus) {
       const lat = parseFloat(data[0].lat);
       const lon = parseFloat(data[0].lon);
       tempLatLng = [lat, lon];
-      if (focus) map.setView([lat, lon], 16);
+      if (focus) map.setView(tempLatLng, 16);
     })
     .catch(() => notify("地理编码失败"));
 }
 
-// ----------- 图片预览 ------------
+// ---------- 图片预览 ----------
 function isImageURL(url) {
   return /\.(png|jpg|jpeg|gif|bmp|svg|webp)(\?.*)?$/i.test(url);
 }
+
 function refreshPostMediaPreview() {
   const input = document.getElementById("mediaInput");
   const preview = document.getElementById("postMediaPreview");
@@ -83,20 +84,12 @@ function refreshPostMediaPreview() {
     if (isImageURL(url)) {
       const img = document.createElement("img");
       img.src = url;
-      img.onclick = () => showImgViewer(url);
       preview.appendChild(img);
     }
   });
 }
-function showImgViewer(url) {
-  document.getElementById("img-viewer-img").src = url;
-  document.getElementById("img-viewer").classList.remove("hidden");
-}
-function hideImgViewer() {
-  document.getElementById("img-viewer").classList.add("hidden");
-}
 
-// ----------- 提交活动 ------------
+// ---------- 提交活动 ----------
 async function submitPost() {
   const title = document.getElementById("titleInput").value.trim();
   const address = document.getElementById("addressInput").value.trim();
@@ -123,7 +116,7 @@ async function submitPost() {
     lng: tempLatLng[1]
   };
 
-  const { error } = await supabase.from('openpin_public_activities').insert([post]);
+  const { error } = await supa.from('openpin_public_activities').insert([post]);
   if (error) return notify("提交失败: " + error.message);
 
   notify("活动发布成功！");
@@ -132,9 +125,9 @@ async function submitPost() {
   loadPosts();
 }
 
-// ----------- 加载活动并展示到地图 ------------
+// ---------- 加载活动 ----------
 async function loadPosts() {
-  const { data, error } = await supabase
+  const { data, error } = await supa
     .from('openpin_public_activities')
     .select('*')
     .order('start_time', { ascending: true });
@@ -148,7 +141,7 @@ async function loadPosts() {
     if (layer instanceof L.Marker) map.removeLayer(layer);
   });
 
-  posts.forEach((post, idx) => {
+  posts.forEach(post => {
     const marker = L.marker([post.lat, post.lng]).addTo(map);
     const popup = `
       <b>${post.title}</b><br>
