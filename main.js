@@ -1,5 +1,9 @@
 const { SUPABASE_URL, SUPABASE_KEY } = window.env;
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+window.env = {
+  SUPABASE_URL: "https://ospkcvwiytlzbqbwojke.supabase.co",
+  SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcGtjdndpeXRsemJxYndvamtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxMzQwNzEsImV4cCI6MjA2NTcxMDA3MX0.q2DBcXsceIpRQ0qAtSxNXMPEjm0Pi2etN356GvpJGX8"
+};
 
 const map = L.map('map').setView([37.7749, -122.4194], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
