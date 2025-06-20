@@ -1,0 +1,11 @@
+# Node / Build
+node_modules/
+dist/
+build/
+
+# Local Environment
+env.js
+
+# System Files
+.DS_Store
+Thumbs.db

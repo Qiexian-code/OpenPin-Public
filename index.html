@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>OpenPin Public</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+
+  <div id="clock"></div>
+  <div id="notify" class="hidden"></div>
+
+  <div id="post-menu">
+    <button id="post-btn" onclick="togglePostForm()">➕ 发起活动</button>
+  </div>
+
+  <div id="post-form" class="hidden">
+    <h3>发起新活动</h3>
+    <input id="titleInput" type="text" placeholder="活动标题（必填）" />
+    <div class="address-row">
+      <input id="addressInput" type="text" placeholder="活动地址（必填）" />
+      <button type="button" onclick="geocodeAddress(true)">定位</button>
+    </div>
+    <input id="startTime" type="datetime-local" />
+    <input id="endTime" type="datetime-local" />
+    <textarea id="descInput" placeholder="活动描述（可选）"></textarea>
+    <input id="posterInput" type="text" placeholder="发帖人（可留空）" />
+    <textarea id="mediaInput" placeholder="图片URL（可多行）" oninput="refreshPostMediaPreview()"></textarea>
+    <div id="postMediaPreview" class="media-preview"></div>
+    <div class="form-actions">
+      <button onclick="submitPost()">提交</button>
+      <button onclick="cancelPostForm()">取消</button>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <!-- 环境变量 + 主逻辑 -->
+  <script src="env.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
