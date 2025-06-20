@@ -21,6 +21,12 @@ A lightweight, map-based event board for campus or community use.
 
 [🔗 Visit the project online / 在线访问](https://qiexian-code.github.io/OpenPin-Public/)
 
+### 🚀 在线演示 / Demo (只展示界面，不含数据功能)
+
+由于 Supabase 密钥未公开，GitHub Pages 演示页面不会连接数据库。
+
+👉 如果你想运行完整功能，请 clone 本项目并配置你自己的 Supabase 项目与 `env.js`。
+
 ---
 
 ## 🛠️ How to Deploy / 本地部署步骤
