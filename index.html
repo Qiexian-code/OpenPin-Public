@@ -6,10 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
 
@@ -41,8 +40,15 @@
 
   <div id="map"></div>
 
-  <!-- 环境变量 + 主逻辑 -->
-  <script src="env.js"></script>
+  <!-- ✅ 内联 env 配置 -->
+  <script>
+    window.env = {
+      SUPABASE_URL: "https://ospkcvwiytlzbqbwojke.supabase.co",
+      SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    };
+  </script>
+
+  <!-- ✅ 加载主逻辑 -->
   <script src="main.js"></script>
 </body>
 </html>
